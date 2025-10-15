@@ -120,10 +120,10 @@ const RoomDetailPage = () => {
                             <div className="absolute top-4 right-4">
                                 <span
                                     className={`px-4 py-2 rounded-full text-sm font-semibold shadow-lg ${room.status === 'available'
-                                            ? 'bg-green-500 text-white'
-                                            : room.status === 'occupied'
-                                                ? 'bg-red-500 text-white'
-                                                : 'bg-yellow-500 text-white'
+                                        ? 'bg-green-500 text-white'
+                                        : room.status === 'occupied'
+                                            ? 'bg-red-500 text-white'
+                                            : 'bg-yellow-500 text-white'
                                         }`}
                                 >
                                     {room.status.charAt(0).toUpperCase() + room.status.slice(1)}
@@ -181,9 +181,11 @@ const RoomDetailPage = () => {
                             <div className="mt-8 space-y-3">
                                 {room.status === 'available' ? (
                                     <>
-                                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-md">
-                                            Book This Room
-                                        </button>
+                                        <Link to={`/bookings/create/${room.id}`}>
+                                            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-md">
+                                                Book This Room
+                                            </button>
+                                        </Link>
                                         <button className="w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-lg border-2 border-gray-300 transition-colors">
                                             Contact Us
                                         </button>

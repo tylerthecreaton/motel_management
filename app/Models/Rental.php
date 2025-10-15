@@ -23,6 +23,14 @@ class Rental extends Model
         'end_date',
         'status',
         'total_price',
+        // ข้อมูลสัญญา
+        'contract_number',
+        'contract_date',
+        'deposit_amount',
+        'advance_payment',
+        'monthly_rent',
+        'special_conditions',
+        'notes',
     ];
 
     /**
@@ -33,7 +41,11 @@ class Rental extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'contract_date' => 'date',
         'total_price' => 'decimal:2',
+        'deposit_amount' => 'decimal:2',
+        'advance_payment' => 'decimal:2',
+        'monthly_rent' => 'decimal:2',
     ];
 
     /**
@@ -58,6 +70,14 @@ class Rental extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    /**
+     * Get the tenant information for this rental.
+     */
+    public function tenantInformation()
+    {
+        return $this->hasOne(TenantInformation::class);
     }
 
     /**

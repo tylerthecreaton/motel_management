@@ -36,6 +36,35 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('rooms/edit', ['roomId' => $id]);
         })->name('edit');
     });
+
+    // Booking/Contract Management Routes
+    Route::prefix('bookings')->name('bookings.')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('bookings/index');
+        })->name('index');
+
+        Route::get('/create/{roomId}', function ($roomId) {
+            return Inertia::render('bookings/create', ['roomId' => $roomId]);
+        })->name('create');
+
+        Route::get('/{id}', function ($id) {
+            return Inertia::render('bookings/show', ['id' => $id]);
+        })->name('show');
+    });
+
+    // Admin Routes
+    Route::prefix('admin')->name('admin.')->group(function () {
+        // Admin Bookings Management
+        Route::prefix('bookings')->name('bookings.')->group(function () {
+            Route::get('/', function () {
+                return Inertia::render('admin/bookings/index');
+            })->name('index');
+            
+            Route::get('/{id}', function ($id) {
+                return Inertia::render('admin/bookings/show', ['id' => $id]);
+            })->name('show');
+        });
+    });
 });
 
 require __DIR__ . '/settings.php';

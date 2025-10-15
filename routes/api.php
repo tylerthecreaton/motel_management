@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,15 @@ Route::middleware('auth:sanctum')->group(function () {
     | Route::apiResource('posts', PostController::class);
     | Route::get('/dashboard', [DashboardController::class, 'index']);
     */
+
+    // Booking Routes - Protected (Authentication Required)
+    // เส้นทางสำหรับการจองห้องพัก (ต้องล็อกอินก่อน)
+    Route::prefix('bookings')->group(function () {
+        Route::get('/', [BookingController::class, 'index']);           // ดูรายการจองของตัวเอง
+        Route::post('/', [BookingController::class, 'store']);          // สร้างคำขอจองใหม่
+        Route::get('/{id}', [BookingController::class, 'show']);        // ดูรายละเอียดการจอง
+        Route::post('/{id}/cancel', [BookingController::class, 'cancel']); // ยกเลิกการจอง
+    });
 });
 
 /*
@@ -77,4 +87,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
     // Room Management - Full CRUD
     Route::apiResource('rooms', RoomController::class);
+
+    // Booking Management - Admin Actions
+    // การจัดการการจอง - สำหรับ admin
+    Route::prefix('bookings')->group(function () {
+        Route::get('/', [BookingController::class, 'getAllBookings']);       // ดูรายการจองทั้งหมด
+        Route::get('/{id}', [BookingController::class, 'show']);             // ดูรายละเอียดการจอง
+        Route::post('/{id}/approve', [BookingController::class, 'approve']); // อนุมัติการจอง
+        Route::post('/{id}/reject', [BookingController::class, 'reject']);   // ปฏิเสธการจอง
+    });
 });

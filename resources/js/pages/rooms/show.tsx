@@ -247,6 +247,53 @@ export default function RoomShow({ roomId }: Props) {
                                 </div>
                             )}
 
+                            {/* Current Tenant */}
+                            {room.status === 'occupied' && room.rentals && room.rentals.length > 0 && (
+                                <div className="mb-6 pb-6 border-b border-gray-200">
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-3">Current Tenant</h2>
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Tenant:</span>
+                                                <span className="font-medium text-gray-900">
+                                                    {room.rentals[0].tenant_information 
+                                                        ? `${room.rentals[0].tenant_information.first_name} ${room.rentals[0].tenant_information.last_name}`
+                                                        : 'N/A'}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Contract:</span>
+                                                <span className="font-medium text-gray-900">
+                                                    #{room.rentals[0].contract_number || room.rentals[0].id}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Start Date:</span>
+                                                <span className="font-medium text-gray-900">
+                                                    {new Date(room.rentals[0].start_date).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">End Date:</span>
+                                                <span className="font-medium text-gray-900">
+                                                    {new Date(room.rentals[0].end_date).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Status:</span>
+                                                <span className={`font-medium ${
+                                                    room.rentals[0].status === 'approved' ? 'text-green-600' :
+                                                    room.rentals[0].status === 'active' ? 'text-blue-600' :
+                                                    'text-gray-600'
+                                                }`}>
+                                                    {room.rentals[0].status.charAt(0).toUpperCase() + room.rentals[0].status.slice(1)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Metadata */}
                             <div className="mb-6 pb-6 border-b border-gray-200">
                                 <h2 className="text-xl font-semibold text-gray-900 mb-3">Information</h2>
@@ -323,9 +370,24 @@ export default function RoomShow({ roomId }: Props) {
                                     </AlertDialog>
                                 </div>
 
-                                {room.status === 'available' && (
-                                    <Button className="w-full" size="lg">
-                                        Book This Room
+                                {room.status === 'available' ? (
+                                    <Link href={`/bookings/create/${room.id}`}>
+                                        <Button className="w-full" size="lg">
+                                            Book This Room
+                                        </Button>
+                                    </Link>
+                                ) : (
+                                    <Button 
+                                        className="w-full" 
+                                        size="lg" 
+                                        disabled
+                                        variant="secondary"
+                                    >
+                                        {room.status === 'occupied' 
+                                            ? 'Room Occupied - Not Available' 
+                                            : room.status === 'maintenance'
+                                                ? 'Under Maintenance'
+                                                : 'Not Available'}
                                     </Button>
                                 )}
                             </div>

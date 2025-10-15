@@ -16,7 +16,7 @@ import { edit as passwordEdit } from '@/routes/password';
 import { edit as appearanceEdit } from '@/routes/appearance';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Settings, User, Lock, Palette } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Settings, User, Lock, Palette, Home } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -24,6 +24,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Rooms',
+        href: '/rooms',
+        icon: Home,
     },
     {
         title: 'Settings',

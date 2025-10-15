@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,11 @@ use Illuminate\Support\Facades\Route;
 | Public Routes (No Authentication Required)
 |--------------------------------------------------------------------------
 */
+
+// Public Room Routes (No Authentication Required)
+// ดูรายการห้องและรายละเอียดห้องสำหรับผู้ใช้ทั่วไป
+Route::get('/rooms', [RoomController::class, 'index']);
+Route::get('/rooms/{id}', [RoomController::class, 'show']);
 
 // Authentication routes with rate limiting
 // Throttle: 5 attempts per minute per IP address
@@ -59,4 +65,16 @@ Route::middleware('auth:sanctum')->group(function () {
     | Route::apiResource('posts', PostController::class);
     | Route::get('/dashboard', [DashboardController::class, 'index']);
     */
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes (Authentication + Admin Role Required)
+|--------------------------------------------------------------------------
+| These routes require both authentication and admin privileges.
+*/
+
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    // Room Management - Full CRUD
+    Route::apiResource('rooms', RoomController::class);
 });

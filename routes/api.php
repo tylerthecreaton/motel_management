@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ElectricityUsageController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserInvoiceController;
+use App\Http\Controllers\UtilityRateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -78,6 +82,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [BookingController::class, 'show']);        // ดูรายละเอียดการจอง
         Route::post('/{id}/cancel', [BookingController::class, 'cancel']); // ยกเลิกการจอง
     });
+
+    // User Invoice Routes - Protected (Authentication Required)
+    // เส้นทางสำหรับดูใบแจ้งหนี้ของผู้เช่า
+    Route::prefix('user')->group(function () {
+        Route::get('/invoices', [UserInvoiceController::class, 'index']);        // ดูรายการใบแจ้งหนี้ของตัวเอง
+        Route::get('/invoices/{id}', [UserInvoiceController::class, 'show']);    // ดูรายละเอียดใบแจ้งหนี้
+    });
 });
 
 /*
@@ -131,4 +142,19 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
         Route::put('/{id}', [PermissionController::class, 'update']);                   // อัพเดทข้อมูล permission
         Route::delete('/{id}', [PermissionController::class, 'destroy']);               // ลบ permission
     });
+
+    // Utility Rate Management
+    // การจัดการอัตราค่าสาธารณูปโภค - สำหรับ admin
+    Route::get('/utility-rates', [UtilityRateController::class, 'show']);               // ดูอัตราค่าสาธารณูปโภคปัจจุบัน
+    Route::put('/utility-rates', [UtilityRateController::class, 'update']);             // อัพเดทอัตราค่าสาธารณูปโภค
+
+    // Electricity Usage Management
+    // การจัดการบันทึกมิเตอร์ไฟฟ้า - สำหรับ admin
+    Route::post('/electricity-usages', [ElectricityUsageController::class, 'store']);   // บันทึกมิเตอร์ไฟฟ้า
+
+    // Invoice Management
+    // การจัดการใบแจ้งหนี้ - สำหรับ admin
+    Route::get('/invoices/active-rentals', [InvoiceController::class, 'getActiveRentals']);    // ดูรายการผู้เช่าที่ active
+    Route::post('/invoices', [InvoiceController::class, 'store']);                             // สร้างใบแจ้งหนี้แบบเลือกผู้เช่า
+    Route::post('/invoices/generate', [InvoiceController::class, 'generateMonthlyInvoices']); // สร้างใบแจ้งหนี้รายเดือนทั้งหมด
 });

@@ -73,6 +73,14 @@ class Rental extends Model
     }
 
     /**
+     * Get all invoices for this rental.
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    /**
      * Get the tenant information for this rental.
      */
     public function tenantInformation()

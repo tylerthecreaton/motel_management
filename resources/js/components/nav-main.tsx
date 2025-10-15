@@ -40,40 +40,52 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 )}
                             >
                                 <SidebarMenuItem>
-                                    <div className="flex items-center gap-1 w-full">
-                                        {/* Main link - คลิกไปหน้า overview */}
-                                        {item.href ? (
-                                            <SidebarMenuButton
-                                                asChild
-                                                tooltip={{ children: item.title }}
-                                                isActive={page.url === item.href}
-                                                className="flex-1"
-                                            >
-                                                <Link href={item.href} prefetch>
-                                                    {item.icon && <item.icon />}
-                                                    <span>{item.title}</span>
-                                                </Link>
-                                            </SidebarMenuButton>
-                                        ) : (
-                                            <SidebarMenuButton
-                                                tooltip={{ children: item.title }}
-                                                className="flex-1 cursor-default"
-                                            >
+                                    {/* Main link - คลิกไปหน้า overview (ซ่อนเมื่อ sidebar collapse) */}
+                                    {item.href ? (
+                                        <SidebarMenuButton
+                                            asChild
+                                            tooltip={{ children: item.title }}
+                                            isActive={page.url === item.href}
+                                            className="group-data-[collapsible=icon]:hidden"
+                                        >
+                                            <Link href={item.href} prefetch>
                                                 {item.icon && <item.icon />}
                                                 <span>{item.title}</span>
-                                            </SidebarMenuButton>
-                                        )}
-                                        
-                                        {/* Dropdown trigger - คลิกเพื่อ expand/collapse */}
-                                        <CollapsibleTrigger asChild>
-                                            <SidebarMenuButton
-                                                tooltip={{ children: 'Expand' }}
-                                                className="w-8 p-0 justify-center"
-                                            >
-                                                <ChevronRight className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                            </SidebarMenuButton>
-                                        </CollapsibleTrigger>
-                                    </div>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    ) : (
+                                        <SidebarMenuButton
+                                            tooltip={{ children: item.title }}
+                                            className="group-data-[collapsible=icon]:hidden cursor-default"
+                                        >
+                                            {item.icon && <item.icon />}
+                                            <span>{item.title}</span>
+                                        </SidebarMenuButton>
+                                    )}
+                                    
+                                    {/* Dropdown trigger - แสดงเมื่อ sidebar expand */}
+                                    <CollapsibleTrigger asChild>
+                                        <SidebarMenuButton
+                                            tooltip={{ children: 'Expand' }}
+                                            className="group-data-[collapsible=icon]:hidden"
+                                        >
+                                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                        </SidebarMenuButton>
+                                    </CollapsibleTrigger>
+
+                                    {/* Link to overview - แสดงเฉพาะเมื่อ sidebar collapse */}
+                                    {item.href && (
+                                        <SidebarMenuButton
+                                            asChild
+                                            tooltip={{ children: item.title }}
+                                            isActive={page.url === item.href}
+                                            className="hidden group-data-[collapsible=icon]:flex"
+                                        >
+                                            <Link href={item.href} prefetch>
+                                                {item.icon && <item.icon />}
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    )}
                                     
                                     <CollapsibleContent>
                                         <SidebarMenuSub>

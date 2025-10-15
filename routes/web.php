@@ -52,6 +52,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('show');
     });
 
+    // Tenant Routes
+    Route::prefix('tenant')->name('tenant.')->group(function () {
+        Route::get('/invoices', function () {
+            return Inertia::render('tenant/invoices');
+        })->name('invoices');
+    });
+
     // Admin Routes
     Route::prefix('admin')->name('admin.')->group(function () {
         // Admin Overview
@@ -107,6 +114,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 return Inertia::render('admin/roles/edit', ['roleId' => $id]);
             })->name('edit');
         });
+
+        // Admin Utility Settings
+        Route::get('/utility-settings', function () {
+            return Inertia::render('admin/utility-settings');
+        })->name('utility-settings');
+
+        // Admin Invoice Management
+        Route::get('/invoices', function () {
+            return Inertia::render('admin/invoices');
+        })->name('invoices');
     });
 });
 

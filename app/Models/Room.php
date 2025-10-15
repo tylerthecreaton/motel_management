@@ -44,6 +44,14 @@ class Room extends Model
     }
 
     /**
+     * Get all electricity usages for this room.
+     */
+    public function electricityUsages(): HasMany
+    {
+        return $this->hasMany(ElectricityUsage::class);
+    }
+
+    /**
      * Get the current active rental for this room.
      */
     public function currentRental()

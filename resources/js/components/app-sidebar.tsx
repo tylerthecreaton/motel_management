@@ -16,7 +16,7 @@ import { edit as passwordEdit } from '@/routes/password';
 import { edit as appearanceEdit } from '@/routes/appearance';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Settings, User, Lock, Palette, Home, FileText, ShieldCheck, Users, Shield } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Settings, User, Lock, Palette, Home, FileText, ShieldCheck, Users, Shield, Zap, DollarSign, Receipt } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -34,6 +34,11 @@ const mainNavItems: NavItem[] = [
         title: 'My Contracts',
         href: '/bookings',
         icon: FileText,
+    },
+    {
+        title: 'My Invoices',
+        href: '/tenant/invoices',
+        icon: Receipt,
     },
     {
         title: 'Admin',
@@ -54,6 +59,16 @@ const mainNavItems: NavItem[] = [
                 title: 'Roles & Permissions',
                 href: '/admin/roles',
                 icon: Shield,
+            },
+            {
+                title: 'Utility Settings',
+                href: '/admin/utility-settings',
+                icon: Zap,
+            },
+            {
+                title: 'Invoice Management',
+                href: '/admin/invoices',
+                icon: DollarSign,
             },
         ],
     },

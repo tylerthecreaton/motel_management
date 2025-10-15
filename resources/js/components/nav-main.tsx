@@ -40,35 +40,14 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 )}
                             >
                                 <SidebarMenuItem>
-                                    {/* Main link - คลิกไปหน้า overview (ซ่อนเมื่อ sidebar collapse) */}
-                                    {item.href ? (
-                                        <SidebarMenuButton
-                                            asChild
-                                            tooltip={{ children: item.title }}
-                                            isActive={page.url === item.href}
-                                            className="group-data-[collapsible=icon]:hidden"
-                                        >
-                                            <Link href={item.href} prefetch>
-                                                {item.icon && <item.icon />}
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    ) : (
-                                        <SidebarMenuButton
-                                            tooltip={{ children: item.title }}
-                                            className="group-data-[collapsible=icon]:hidden cursor-default"
-                                        >
-                                            {item.icon && <item.icon />}
-                                            <span>{item.title}</span>
-                                        </SidebarMenuButton>
-                                    )}
-                                    
                                     {/* Dropdown trigger - แสดงเมื่อ sidebar expand */}
                                     <CollapsibleTrigger asChild>
                                         <SidebarMenuButton
-                                            tooltip={{ children: 'Expand' }}
+                                            tooltip={{ children: item.title }}
                                             className="group-data-[collapsible=icon]:hidden"
                                         >
+                                            {item.icon && <item.icon />}
+                                            <span>{item.title}</span>
                                             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                         </SidebarMenuButton>
                                     </CollapsibleTrigger>

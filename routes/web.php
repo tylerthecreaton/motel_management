@@ -59,10 +59,48 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', function () {
                 return Inertia::render('admin/bookings/index');
             })->name('index');
-            
+
             Route::get('/{id}', function ($id) {
                 return Inertia::render('admin/bookings/show', ['id' => $id]);
             })->name('show');
+        });
+
+        // Admin Users Management
+        Route::prefix('users')->name('users.')->group(function () {
+            Route::get('/', function () {
+                return Inertia::render('admin/users/index');
+            })->name('index');
+
+            Route::get('/create', function () {
+                return Inertia::render('admin/users/create');
+            })->name('create');
+
+            Route::get('/{id}', function ($id) {
+                return Inertia::render('admin/users/show', ['userId' => $id]);
+            })->name('show');
+
+            Route::get('/{id}/edit', function ($id) {
+                return Inertia::render('admin/users/edit', ['userId' => $id]);
+            })->name('edit');
+        });
+
+        // Admin Roles Management
+        Route::prefix('roles')->name('roles.')->group(function () {
+            Route::get('/', function () {
+                return Inertia::render('admin/roles/index');
+            })->name('index');
+
+            Route::get('/create', function () {
+                return Inertia::render('admin/roles/create');
+            })->name('create');
+
+            Route::get('/{id}', function ($id) {
+                return Inertia::render('admin/roles/show', ['roleId' => $id]);
+            })->name('show');
+
+            Route::get('/{id}/edit', function ($id) {
+                return Inertia::render('admin/roles/edit', ['roleId' => $id]);
+            })->name('edit');
         });
     });
 });

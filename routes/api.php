@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -95,5 +98,37 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
         Route::get('/{id}', [BookingController::class, 'show']);             // ดูรายละเอียดการจอง
         Route::post('/{id}/approve', [BookingController::class, 'approve']); // อนุมัติการจอง
         Route::post('/{id}/reject', [BookingController::class, 'reject']);   // ปฏิเสธการจอง
+    });
+
+    // User Management - Full CRUD
+    // การจัดการผู้ใช้ - สำหรับ admin
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index']);                              // ดูรายการผู้ใช้ทั้งหมด
+        Route::post('/', [UserController::class, 'store']);                             // สร้างผู้ใช้ใหม่
+        Route::get('/{id}', [UserController::class, 'show']);                           // ดูรายละเอียดผู้ใช้
+        Route::put('/{id}', [UserController::class, 'update']);                         // อัพเดทข้อมูลผู้ใช้
+        Route::delete('/{id}', [UserController::class, 'destroy']);                     // ลบผู้ใช้
+        Route::post('/{id}/toggle-verification', [UserController::class, 'toggleEmailVerification']); // เปลี่ยนสถานะการยืนยันอีเมล
+    });
+
+    // Role Management - Full CRUD
+    // การจัดการ roles - สำหรับ admin
+    Route::prefix('roles')->group(function () {
+        Route::get('/', [RoleController::class, 'index']);                              // ดูรายการ roles ทั้งหมด
+        Route::post('/', [RoleController::class, 'store']);                             // สร้าง role ใหม่
+        Route::get('/permissions', [RoleController::class, 'permissions']);             // ดูรายการ permissions ทั้งหมด
+        Route::get('/{id}', [RoleController::class, 'show']);                           // ดูรายละเอียด role
+        Route::put('/{id}', [RoleController::class, 'update']);                         // อัพเดทข้อมูล role
+        Route::delete('/{id}', [RoleController::class, 'destroy']);                     // ลบ role
+    });
+
+    // Permission Management
+    // การจัดการ permissions - สำหรับ admin
+    Route::prefix('permissions')->group(function () {
+        Route::get('/', [PermissionController::class, 'index']);                        // ดูรายการ permissions ทั้งหมด
+        Route::get('/grouped', [PermissionController::class, 'grouped']);               // ดูรายการ permissions แบบจัดกลุ่ม
+        Route::post('/', [PermissionController::class, 'store']);                       // สร้าง permission ใหม่
+        Route::put('/{id}', [PermissionController::class, 'update']);                   // อัพเดทข้อมูล permission
+        Route::delete('/{id}', [PermissionController::class, 'destroy']);               // ลบ permission
     });
 });

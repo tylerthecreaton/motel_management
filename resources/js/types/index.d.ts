@@ -154,3 +154,38 @@ export interface TenantFormData {
     id_card_copy?: File;
     photo?: File;
 }
+
+export interface UserFormData {
+    name: string;
+    email: string;
+    password?: string;
+    password_confirmation?: string;
+    roles?: number[];
+}
+
+// Role Types
+export interface Role {
+    id: number;
+    name: string;
+    display_name: string;
+    description: string | null;
+    created_at: string;
+    updated_at: string;
+    // Relationships
+    users?: User[];
+    users_count?: number;
+    permissions?: Permission[];
+}
+
+// Permission Types  
+export interface Permission {
+    id: number;
+    name: string;
+    display_name: string;
+    description: string | null;
+    group: string | null;
+    created_at: string;
+    updated_at: string;
+    // Relationships
+    roles?: Role[];
+}

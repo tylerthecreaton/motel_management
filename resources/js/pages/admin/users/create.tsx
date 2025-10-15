@@ -1,11 +1,12 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { Head, router } from '@inertiajs/react';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
-import { type BreadcrumbItem } from '@/types';
+import { Role, type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowLeft, Save } from 'lucide-react';
 
@@ -14,23 +15,28 @@ interface FormData {
     email: string;
     password: string;
     password_confirmation: string;
+    roles: number[];
 }
 
 interface ValidationErrors {
     name?: string[];
     email?: string[];
     password?: string[];
+    roles?: string[];
 }
 
 export default function AdminUsersCreate() {
+    const [roles, setRoles] = useState<Role[]>([]);
     const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        roles: [],
     });
     const [errors, setErrors] = useState<ValidationErrors>({});
     const [loading, setLoading] = useState(false);
+    const [fetchLoading, setFetchLoading] = useState(true);
     const [generalError, setGeneralError] = useState<string | null>(null);
 
     // Breadcrumbs
@@ -40,6 +46,44 @@ export default function AdminUsersCreate() {
         { title: 'Users Management', href: '/admin/users' },
         { title: 'Create User', href: '/admin/users/create' },
     ];
+
+    // Fetch roles
+    useEffect(() => {
+        fetchRoles();
+    }, []);
+
+    const fetchRoles = async () => {
+        try {
+            setFetchLoading(true);
+            const response = await fetch('/api/admin/roles', {
+                headers: {
+                    'Accept': 'application/json',
+                },
+                credentials: 'same-origin',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch roles');
+            }
+
+            const data = await response.json();
+            const rolesList = data.data || [];
+            setRoles(rolesList);
+
+            // Set default role to 'user'
+            const userRole = rolesList.find((r: Role) => r.name === 'user');
+            if (userRole) {
+                setFormData(prev => ({
+                    ...prev,
+                    roles: [userRole.id]
+                }));
+            }
+        } catch (err) {
+            console.error('Error fetching roles:', err);
+        } finally {
+            setFetchLoading(false);
+        }
+    };
 
     // Handle input change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +99,16 @@ export default function AdminUsersCreate() {
                 [name]: undefined,
             }));
         }
+    };
+
+    // Handle role toggle
+    const handleRoleToggle = (roleId: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            roles: prev.roles.includes(roleId)
+                ? prev.roles.filter((id) => id !== roleId)
+                : [...prev.roles, roleId],
+        }));
     };
 
     // Handle form submit
@@ -225,6 +279,45 @@ export default function AdminUsersCreate() {
                                     placeholder="••••••••"
                                     required
                                 />
+                            </div>
+
+                            {/* Roles */}
+                            <div className="space-y-2">
+                                <Label>
+                                    Roles <span className="text-red-500">*</span>
+                                </Label>
+                                {fetchLoading ? (
+                                    <p className="text-sm text-gray-500">Loading roles...</p>
+                                ) : (
+                                    <div className="space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                                        {roles.map((role) => (
+                                            <div key={role.id} className="flex items-start space-x-3">
+                                                <Checkbox
+                                                    id={`role-${role.id}`}
+                                                    checked={formData.roles.includes(role.id)}
+                                                    onCheckedChange={() => handleRoleToggle(role.id)}
+                                                />
+                                                <div className="flex-1">
+                                                    <Label
+                                                        htmlFor={`role-${role.id}`}
+                                                        className="text-sm font-medium cursor-pointer"
+                                                    >
+                                                        {role.display_name}
+                                                    </Label>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {role.description || role.name}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                {errors.roles && (
+                                    <p className="text-sm text-red-500">{errors.roles[0]}</p>
+                                )}
+                                <p className="text-sm text-gray-500">
+                                    Default role is 'User'. You can select multiple roles.
+                                </p>
                             </div>
 
                             {/* Submit Buttons */}

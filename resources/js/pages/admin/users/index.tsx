@@ -334,9 +334,10 @@ export default function AdminUsersIndex() {
                                         <TableRow>
                                             <TableHead>Name</TableHead>
                                             <TableHead>Email</TableHead>
-                                            <TableHead className="hidden md:table-cell">Status</TableHead>
-                                            <TableHead className="hidden lg:table-cell">Rentals</TableHead>
-                                            <TableHead className="hidden xl:table-cell">Created</TableHead>
+                                            <TableHead className="hidden md:table-cell">Roles</TableHead>
+                                            <TableHead className="hidden lg:table-cell">Status</TableHead>
+                                            <TableHead className="hidden xl:table-cell">Rentals</TableHead>
+                                            <TableHead className="hidden 2xl:table-cell">Created</TableHead>
                                             <TableHead className="text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -348,6 +349,23 @@ export default function AdminUsersIndex() {
                                                     {user.email}
                                                 </TableCell>
                                                 <TableCell className="hidden md:table-cell">
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {user.roles && user.roles.length > 0 ? (
+                                                            user.roles.map((role) => (
+                                                                <Badge
+                                                                    key={role.id}
+                                                                    variant="outline"
+                                                                    className="text-xs"
+                                                                >
+                                                                    {role.display_name}
+                                                                </Badge>
+                                                            ))
+                                                        ) : (
+                                                            <span className="text-xs text-gray-400">No roles</span>
+                                                        )}
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="hidden lg:table-cell">
                                                     {user.email_verified_at ? (
                                                         <Badge variant="default" className="gap-1">
                                                             <MailCheck className="h-3 w-3" />
@@ -360,10 +378,10 @@ export default function AdminUsersIndex() {
                                                         </Badge>
                                                     )}
                                                 </TableCell>
-                                                <TableCell className="hidden lg:table-cell">
+                                                <TableCell className="hidden xl:table-cell">
                                                     <Badge variant="outline">{user.rentals_count || 0}</Badge>
                                                 </TableCell>
-                                                <TableCell className="hidden xl:table-cell text-sm text-gray-600 dark:text-gray-400">
+                                                <TableCell className="hidden 2xl:table-cell text-sm text-gray-600 dark:text-gray-400">
                                                     {formatDate(user.created_at)}
                                                 </TableCell>
                                                 <TableCell className="text-right">

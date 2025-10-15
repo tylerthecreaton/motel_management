@@ -54,6 +54,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Admin Routes
     Route::prefix('admin')->name('admin.')->group(function () {
+        // Admin Overview
+        Route::get('/', function () {
+            return Inertia::render('admin/index');
+        })->name('index');
+
         // Admin Bookings Management
         Route::prefix('bookings')->name('bookings.')->group(function () {
             Route::get('/', function () {

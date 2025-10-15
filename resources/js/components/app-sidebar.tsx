@@ -37,6 +37,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Admin',
+        href: '/admin',
         icon: ShieldCheck,
         items: [
             {
@@ -58,6 +59,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Settings',
+        href: '/settings',
         icon: Settings,
         items: [
             {

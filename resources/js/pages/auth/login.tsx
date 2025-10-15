@@ -10,6 +10,8 @@ import AuthLayout from '@/layouts/auth-layout';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { useState } from 'react';
 
 interface LoginProps {
     status?: string;
@@ -17,6 +19,9 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
+    // State สำหรับ toggle password visibility
+    const [showPassword, setShowPassword] = useState(false);
+
     return (
         <AuthLayout
             title="Log in to your account"
@@ -32,70 +37,109 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-6">
+                            {/* Email Input with Icon */}
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="email"
-                                    placeholder="email@example.com"
-                                />
+                                <Label htmlFor="email" className="text-sm font-medium">
+                                    Email address
+                                </Label>
+                                <div className="relative">
+                                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        required
+                                        autoFocus
+                                        tabIndex={1}
+                                        autoComplete="email"
+                                        placeholder="email@example.com"
+                                        className="pl-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                                    />
+                                </div>
                                 <InputError message={errors.email} />
                             </div>
 
+                            {/* Password Input with Icon and Toggle */}
                             <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
+                                <div className="flex items-center justify-between">
+                                    <Label htmlFor="password" className="text-sm font-medium">
+                                        Password
+                                    </Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
-                                            className="ml-auto text-sm"
+                                            className="text-sm font-medium transition-colors hover:text-primary"
                                             tabIndex={5}
                                         >
                                             Forgot password?
                                         </TextLink>
                                     )}
                                 </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    placeholder="Password"
-                                />
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                    <Input
+                                        id="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        required
+                                        tabIndex={2}
+                                        autoComplete="current-password"
+                                        placeholder="Enter your password"
+                                        className="pl-10 pr-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                                        tabIndex={-1}
+                                    >
+                                        {showPassword ? (
+                                            <EyeOff className="h-4 w-4" />
+                                        ) : (
+                                            <Eye className="h-4 w-4" />
+                                        )}
+                                    </button>
+                                </div>
                                 <InputError message={errors.password} />
                             </div>
 
+                            {/* Remember Me Checkbox */}
                             <div className="flex items-center space-x-3">
                                 <Checkbox
                                     id="remember"
                                     name="remember"
                                     tabIndex={3}
+                                    className="transition-all duration-200"
                                 />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label 
+                                    htmlFor="remember" 
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    Remember me for 30 days
+                                </Label>
                             </div>
 
+                            {/* Submit Button */}
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
+                                className="mt-4 w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
                             >
-                                {processing && <Spinner />}
-                                Log in
+                                {processing && <Spinner className="mr-2" />}
+                                {processing ? 'Logging in...' : 'Log in'}
                             </Button>
                         </div>
 
+                        {/* Sign Up Link */}
                         <div className="text-center text-sm text-muted-foreground">
                             Don't have an account?{' '}
-                            <TextLink href={register()} tabIndex={5}>
+                            <TextLink 
+                                href={register()} 
+                                tabIndex={5}
+                                className="font-medium transition-colors hover:text-primary"
+                            >
                                 Sign up
                             </TextLink>
                         </div>
